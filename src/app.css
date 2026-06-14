@@ -1,3 +1,20 @@
+.fireflies-container {
+  min-width: 100vw;
+  min-height: 100vh;
+  overflow: hidden !important;
+}
+
+.dot {
+  width: 4px;
+  height: 4px;
+  background-color: #f0d20c;
+  box-shadow: 0px 0px 11px 4px #f0d20c;
+  border-radius: 50%;
+  position: absolute;
+  z-index: 2;
+}
+
+
 .react-calendar {
     border: 2px solid red;
     padding: 2%;

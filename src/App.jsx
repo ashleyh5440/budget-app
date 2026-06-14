@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { gsap } from 'gsap';
 import Calendar from 'react-calendar';
 import './app.css'
 
@@ -13,37 +14,71 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 function App() {
+
+  // Firefly animation
+   const fireFliesContainerRef = useRef(null);
+    const totalFireFlies = 50;
+
+    useEffect(() => {
+
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+
+        const Anim = (elm) => {
+            const containerRect = fireFliesContainerRef.current.getBoundingClientRect();
+            const containerWidth = containerRect.width;
+            const containerHeight = containerRect.height;
+
+            gsap.to(elm, {
+                duration: Math.random() * 10 + 10,
+                x: Math.random() * containerWidth,
+                y: Math.random() * containerHeight,
+                opacity: Math.random(),
+                scale: Math.random() * 0.5 + 1,
+                delay: Math.random() * 2,
+                onComplete: () => Anim(elm),
+            });
+        };
+
+        const fireFlies = fireFliesContainerRef.current.children;
+
+        for (let i = 0; i < totalFireFlies; i++) {
+            const fireFly = fireFlies[i];
+            gsap.set(fireFly, { opacity: 0 });
+            Anim(fireFly);
+        }
+
+        return () => {
+            for (let i = 0; i < totalFireFlies; i++) {
+                gsap.killTweensOf(fireFlies[i]);
+            }
+        };
+    }, []);
+
+
   const [budget, setBudget] = useState(() => {
     const saved = localStorage.getItem("budget");
     return saved ? parseFloat(saved) : 3200;
   });
 
-  // starting paycheck date every 14 days
-const PAYCHECK_START = new Date("2026-06-25");
-const PAYCHECK_AMOUNT = 1600;
+  const PAYCHECK_START = new Date("2026-06-25");
+  const PAYCHECK_AMOUNT = 1600;
 
-// calculate how many biweekly paychecks have occurred
-const today = selectedDate; 
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [bills, setBills] = useState([]);
+  const [billName, setBillName] = useState("");
 
-const daysSinceStart = Math.floor(
-  (today - PAYCHECK_START) / (1000 * 60 * 60 * 24)
-);
+  const daysSinceStart = Math.floor(
+    (selectedDate - PAYCHECK_START) / (1000 * 60 * 60 * 24)
+  );
 
-const paycheckCount =
-  daysSinceStart >= 0
-    ? Math.floor(daysSinceStart / 14) + 1
-    : 0;
+  const paycheckCount =
+    daysSinceStart >= 0
+      ? Math.floor(daysSinceStart / 14) + 1
+      : 0;
 
-const availableIncome = paycheckCount * PAYCHECK_AMOUNT;
+  const availableIncome = paycheckCount * PAYCHECK_AMOUNT;
 
-const totalExpenses = Object.values(expenses).reduce(
-  (sum, value) => sum + Number(value || 0),
-  0
-);
-
-const currentBalance = availableIncome - totalExpenses;
-
-//monthly expenses
   const [expenses, setExpenses] = useState({
     rent: 0,
     carPayment: 0,
@@ -62,11 +97,11 @@ const currentBalance = availableIncome - totalExpenses;
   }, [budget]);
 
   const totalExpenses = Object.values(expenses).reduce(
-    (sum, value) => sum + Number(value || 0),
-    0
+  (sum, value) => sum + Number(value || 0),
+  0
   );
 
-  const currentBalance = budget - totalExpenses;
+  const currentBalance = availableIncome - totalExpenses;
 
   const handleExpenseChange = (category, value) => {
     setExpenses({
@@ -74,10 +109,6 @@ const currentBalance = availableIncome - totalExpenses;
       [category]: Number(value) || 0,
     });
   };
-
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [bills, setBills] = useState([]);
-  const [billName, setBillName] = useState("");
 
   const addBill = () => {
     if (!billName.trim()) return;
@@ -94,14 +125,20 @@ const currentBalance = availableIncome - totalExpenses;
   };
 
   return (
-    <section>
-      <h1>💰 The Treasury</h1>
+    <section className="fireflies-container" ref={fireFliesContainerRef}>
+      {Array.from({ length: totalFireFlies }, (_, index) => (
+                    <div
+                        key={index}
+                        className="dot"
+                    />
+                ))}
+      <h1>≽༏≼ Firefly Treasury ≽༏≼</h1>
 
       <div>
-        <h3>Monthly Budget</h3>
+        <h4>Monthly Budget</h4>
         <p>${budget.toFixed(2)}</p>
 
-        <h3>Current Balance</h3>
+        <h4>Current Balance</h4>
         <p>${currentBalance.toFixed(2)}</p>
       </div>
 
