@@ -76,38 +76,42 @@ function App() {
       ? Math.floor(daysSinceStart / 14) + 1
       : 0;
 
-  const availableIncome = paycheckCount * PAYCHECK_AMOUNT;
+  const availableIncome = budget + (paycheckCount * PAYCHECK_AMOUNT);
 
-  const [expenses, setExpenses] = useState({
-    rent: 0,
-    carPayment: 0,
-    carInsurance: 0,
-    gas: 0,
-    groceries: 0,
-    electric: 0,
-    internet: 0,
-    phone: 0,
-    transportation: 0,
-    subscriptions: 0,
-  });
+  // const [expenses, setExpenses] = useState({
+  //   rent: 0,
+  //   carPayment: 0,
+  //   carInsurance: 0,
+  //   gas: 0,
+  //   groceries: 0,
+  //   electric: 0,
+  //   internet: 0,
+  //   phone: 0,
+  //   transportation: 0,
+  //   subscriptions: 0,
+  // });
+
+  const [expenses, setExpenses] = useState([]);
+  const [selectedBillType, setSelectedBillType] = useState("");
+  const [amount, setAmount] = useState("");
 
   useEffect(() => {
     localStorage.setItem("budget", budget);
   }, [budget]);
 
-  const totalExpenses = Object.values(expenses).reduce(
-  (sum, value) => sum + Number(value || 0),
-  0
+  const totalExpenses = expenses.reduce(
+    (sum, expense) => sum + expense.amount,
+    0
   );
 
   const currentBalance = availableIncome - totalExpenses;
 
-  const handleExpenseChange = (category, value) => {
-    setExpenses({
-      ...expenses,
-      [category]: Number(value) || 0,
-    });
-  };
+  // const handleExpenseChange = (category, value) => {
+  //   setExpenses({
+  //     ...expenses,
+  //     [category]: Number(value) || 0,
+  //   });
+  // };
 
   const addBill = () => {
     if (!billName.trim()) return;
@@ -121,6 +125,35 @@ function App() {
     ]);
 
     setBillName("");
+  };
+
+  const addExpense = () => {
+    if (!selectedBillType || !amount) return;
+
+    setExpenses([
+      ...expenses,
+      {
+        id: Date.now(),
+        type: selectedBillType,
+        amount: Number(amount),
+      },
+  ]);
+
+  setAmount("");
+  };
+
+  const deleteExpense = (id) => {
+    setExpenses(expenses.filter((expense) => expense.id !== id));
+  };
+
+  const updateExpense = (id, value) => {
+    setExpenses(
+      expenses.map((expense) =>
+        expense.id === id
+          ? { ...expense, amount: Number(value) || 0 }
+          : expense
+      )
+    );
   };
 
   return (
@@ -140,31 +173,41 @@ function App() {
         <h4>Current Balance</h4>
         <p>${currentBalance.toFixed(2)}</p>
       </div>
-
+      {/* insert bill */}
       <Row>
         <Dropdown>
-          <Dropdown.Toggle variant="success" id="dropdown-basic">
-              Bill Type
+          <Dropdown.Toggle variant="success">
+            {selectedBillType || "Bill Type"}
           </Dropdown.Toggle>
-
           <Dropdown.Menu>
-            <Dropdown.Item href="#/action-1">Rent</Dropdown.Item>
-            <Dropdown.Item href="#/action-2">Car Payment</Dropdown.Item>
-            <Dropdown.Item href="#/action-3">Car Insurance</Dropdown.Item>
-            <Dropdown.Item href="#/action-4">Internet</Dropdown.Item>
-            <Dropdown.Item href="#/action-5">Gas</Dropdown.Item>
-            <Dropdown.Item href="#/action-6">Electric</Dropdown.Item>
-            <Dropdown.Item href="#/action-7">Transportation</Dropdown.Item>
-            <Dropdown.Item href="#/action-8">Subscriptions</Dropdown.Item>
-            <Dropdown.Item href="#/action-9">Phone</Dropdown.Item>
-            <Dropdown.Item href="#/action-10">Groceries</Dropdown.Item>
-            <Dropdown.Item href="#/action-11">Other</Dropdown.Item>
-            </Dropdown.Menu>
+            <Dropdown.Item onClick={() => setSelectedBillType("Rent")}>Rent
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => setSelectedBillType("Car Payment")}>Car Payment</Dropdown.Item>
+            <Dropdown.Item onClick={() => setSelectedBillType("Car Insurance")}>Car Insurance</Dropdown.Item>
+            <Dropdown.Item onClick={() => setSelectedBillType("Internet")}>Internet</Dropdown.Item>
+            <Dropdown.Item onClick={() => setSelectedBillType("Gas")}>Gas</Dropdown.Item>
+            <Dropdown.Item onClick={() => setSelectedBillType("Electric")}>Electric</Dropdown.Item>
+            <Dropdown.Item onClick={() => setSelectedBillType("Transportation")}>Transportation</Dropdown.Item>
+            <Dropdown.Item onClick={() => setSelectedBillType("Subscriptions")}>Subscriptions</Dropdown.Item>
+            <Dropdown.Item onClick={() => setSelectedBillType("Phone")}>Phone</Dropdown.Item>
+            <Dropdown.Item onClick={() => setSelectedBillType("Groceries")}>Groceries</Dropdown.Item>
+            <Dropdown.Item onClick={() => setSelectedBillType("Other")}>Other</Dropdown.Item>
+          </Dropdown.Menu>
         </Dropdown>
+        {selectedBillType && (
+          <div style={{ marginTop: "10px" }}>
+            <input
+              type="number"
+              placeholder="Amount"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+            />
+            <button onClick={addExpense}>Add Expense</button>
+          </div>
+        )}
       </Row>
-
+      {/* calender */}
       <Row>
-
           <Calendar
             onChange={setSelectedDate}
             value={selectedDate}
@@ -197,8 +240,33 @@ function App() {
             ))}
           </ul>
       </Row>
-      
-
+      {/* expenses list */}
+      <Row>
+        <div style={{ marginTop: "20px" }}>
+          <h4>Expenses</h4>
+          {expenses.map((expense) => (
+            <div
+              key={expense.id}
+              style={{
+                display: "flex",
+                gap: "10px",
+                marginBottom: "10px",
+                alignItems: "center",
+              }}
+            >
+              <span>{expense.type}</span>
+              <input
+                type="number"
+                value={expense.amount}
+                onChange={(e) =>
+                  updateExpense(expense.id, e.target.value)
+                }
+              />
+              <button onClick={() => deleteExpense(expense.id)}>Delete</button>
+              </div>
+            ))}
+        </div>
+      </Row>
     </section>
   );
 }
