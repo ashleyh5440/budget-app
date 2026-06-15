@@ -254,8 +254,8 @@ function App() {
       </Row>
       {/* expenses list */}
       <Row id="expenses-box">
-        <div style={{ marginTop: "20px", width: "80%" }}>
-          <h4>Expenses</h4>
+        <div style={{ marginTop: "20px", width: "80%", borderTop: "2px solid white" }}>
+          <h4 style={{ marginTop: "10px"}}>Expenses</h4>
           {expenses.map((expense) => (
             <div
               key={expense.id}
