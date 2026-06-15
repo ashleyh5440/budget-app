@@ -14,6 +14,20 @@
   z-index: 2;
 }
 
+h1 {
+    font-family: "Birthstone", cursive;
+    color: white;
+    font-size: 60px !important;
+}
+
+h4 {
+    color: white;
+    font-size: 20px !important;
+}
+
+p {
+    color: white;
+}
 
 .react-calendar {
     border: 2px solid red;

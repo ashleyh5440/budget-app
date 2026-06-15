@@ -3,13 +3,12 @@ import { gsap } from 'gsap';
 import Calendar from 'react-calendar';
 import './app.css'
 
-
-
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import { Chart } from "react-google-charts";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Dropdown from 'react-bootstrap/Dropdown';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -143,115 +142,29 @@ function App() {
       </div>
 
       <Row>
-        <Col
-          className="left"
-          style={{
-            border: "2px solid green",
-            padding: "10px",
-          }}
-        >
-          <div>
-            Rent:
-            <input
-              type="number"
-              onChange={(e) =>
-                handleExpenseChange("rent", e.target.value)
-              }
-            />
-          </div>
+        <Dropdown>
+          <Dropdown.Toggle variant="success" id="dropdown-basic">
+              Bill Type
+          </Dropdown.Toggle>
 
-          <div>
-            Car Payment:
-            <input
-              type="number"
-              onChange={(e) =>
-                handleExpenseChange("carPayment", e.target.value)
-              }
-            />
-          </div>
+          <Dropdown.Menu>
+            <Dropdown.Item href="#/action-1">Rent</Dropdown.Item>
+            <Dropdown.Item href="#/action-2">Car Payment</Dropdown.Item>
+            <Dropdown.Item href="#/action-3">Car Insurance</Dropdown.Item>
+            <Dropdown.Item href="#/action-4">Internet</Dropdown.Item>
+            <Dropdown.Item href="#/action-5">Gas</Dropdown.Item>
+            <Dropdown.Item href="#/action-6">Electric</Dropdown.Item>
+            <Dropdown.Item href="#/action-7">Transportation</Dropdown.Item>
+            <Dropdown.Item href="#/action-8">Subscriptions</Dropdown.Item>
+            <Dropdown.Item href="#/action-9">Phone</Dropdown.Item>
+            <Dropdown.Item href="#/action-10">Groceries</Dropdown.Item>
+            <Dropdown.Item href="#/action-11">Other</Dropdown.Item>
+            </Dropdown.Menu>
+        </Dropdown>
+      </Row>
 
-          <div>
-            Car Insurance:
-            <input
-              type="number"
-              onChange={(e) =>
-                handleExpenseChange("carInsurance", e.target.value)
-              }
-            />
-          </div>
+      <Row>
 
-          <div>
-            Gas:
-            <input
-              type="number"
-              onChange={(e) =>
-                handleExpenseChange("gas", e.target.value)
-              }
-            />
-          </div>
-
-          <div>
-            Groceries:
-            <input
-              type="number"
-              onChange={(e) =>
-                handleExpenseChange("groceries", e.target.value)
-              }
-            />
-          </div>
-
-          <div>
-            Electric:
-            <input
-              type="number"
-              onChange={(e) =>
-                handleExpenseChange("electric", e.target.value)
-              }
-            />
-          </div>
-
-          <div>
-            Internet:
-            <input
-              type="number"
-              onChange={(e) =>
-                handleExpenseChange("internet", e.target.value)
-              }
-            />
-          </div>
-
-          <div>
-            Phone:
-            <input
-              type="number"
-              onChange={(e) =>
-                handleExpenseChange("phone", e.target.value)
-              }
-            />
-          </div>
-
-          <div>
-            Transportation:
-            <input
-              type="number"
-              onChange={(e) =>
-                handleExpenseChange("transportation", e.target.value)
-              }
-            />
-          </div>
-
-          <div>
-            Subscriptions:
-            <input
-              type="number"
-              onChange={(e) =>
-                handleExpenseChange("subscriptions", e.target.value)
-              }
-            />
-          </div>
-        </Col>
-
-        <Col>
           <Calendar
             onChange={setSelectedDate}
             value={selectedDate}
@@ -283,8 +196,9 @@ function App() {
               </li>
             ))}
           </ul>
-        </Col>
       </Row>
+      
+
     </section>
   );
 }
