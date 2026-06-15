@@ -78,20 +78,8 @@ function App() {
 
   const availableIncome = budget + (paycheckCount * PAYCHECK_AMOUNT);
 
-  // const [expenses, setExpenses] = useState({
-  //   rent: 0,
-  //   carPayment: 0,
-  //   carInsurance: 0,
-  //   gas: 0,
-  //   groceries: 0,
-  //   electric: 0,
-  //   internet: 0,
-  //   phone: 0,
-  //   transportation: 0,
-  //   subscriptions: 0,
-  // });
-
   const [expenses, setExpenses] = useState([]);
+  const [otherExpense, setOtherExpense] = useState("");
   const [selectedBillType, setSelectedBillType] = useState("");
   const [amount, setAmount] = useState("");
 
@@ -105,13 +93,6 @@ function App() {
   );
 
   const currentBalance = availableIncome - totalExpenses;
-
-  // const handleExpenseChange = (category, value) => {
-  //   setExpenses({
-  //     ...expenses,
-  //     [category]: Number(value) || 0,
-  //   });
-  // };
 
   const addBill = () => {
     if (!billName.trim()) return;
@@ -127,19 +108,40 @@ function App() {
     setBillName("");
   };
 
+  // const addExpense = () => {
+  //   if (!selectedBillType || !amount) return;
+
+  //   setExpenses([
+  //     ...expenses,
+  //     {
+  //       id: Date.now(),
+  //       type: selectedBillType,
+  //       amount: Number(amount),
+  //     },
+  // ]);
+
+  // setAmount("");
+  // };
+
   const addExpense = () => {
-    if (!selectedBillType || !amount) return;
+    const expenseType =
+      selectedBillType === "Other"
+        ? otherExpense.trim()
+        : selectedBillType;
+
+    if (!expenseType || !amount) return;
 
     setExpenses([
       ...expenses,
       {
         id: Date.now(),
-        type: selectedBillType,
+        type: expenseType,
         amount: Number(amount),
       },
-  ]);
+    ]);
 
-  setAmount("");
+    setAmount("");
+    setOtherExpense("");
   };
 
   const deleteExpense = (id) => {
@@ -194,8 +196,17 @@ function App() {
             <Dropdown.Item onClick={() => setSelectedBillType("Other")}>Other</Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
+        
         {selectedBillType && (
           <div style={{ marginTop: "10px" }}>
+            {selectedBillType === "Other" && (
+      <input
+        type="text"
+        placeholder="Expense Name"
+        value={otherExpense}
+        onChange={(e) => setOtherExpense(e.target.value)}
+      />
+            )}
             <input
               type="number"
               placeholder="Amount"
