@@ -1,12 +1,17 @@
+p, li, abbr {
+    font-family: "Emilys Candy", serif;
+}
+
 h1 {
-    font-family: "Birthstone", cursive;
+    font-family: "Emilys Candy", serif;
     color: white;
-    font-size: 60px !important;
+    font-size: 40px !important;
 }
 
 h4 {
     color: white;
     font-size: 20px !important;
+    font-family: "Emilys Candy", serif;
 }
 
 p {
@@ -36,7 +41,7 @@ input {
   border-radius: 50%;
   position: absolute;
   z-index: 2;
-   overflow: hidden !important;
+  overflow: hidden !important;
 }
 
 .container {
@@ -83,7 +88,7 @@ input {
 
 .react-calendar__navigation__label__labelText {
     color: white;
-    font-family: "Birthstone", cursive;
+    font-family: "Emilys Candy", serif;
     font-size: 25px;
 }
 
@@ -95,18 +100,24 @@ input {
     margin-top: 15px;
 }
 
-.add-expense-btn, .dlt-expense-btn, #add-bill-btn {
+.add-expense-btn, #add-bill-btn {
     width: 40%;
     background-color: rgb(13, 0, 69);
     color: white;
-    font-family: "Birthstone", cursive;
-    font-size: 25px;
+    font-family: "Emilys Candy", serif;
+    font-size: 18px;
     margin-top: 10px;
     border: none;
 }
 
-.dlt-expense-btn {
-    width: 70%;
+.dlt-bill-btn, .dlt-expense-btn {
+    width: 40%;
+    margin: 0 8px;
+    color: white;
+    font-family: "Emilys Candy", serif;
+    font-size: 25px;
+    background-color: rgba(13, 0, 69, 0.02);
+    /* border: none; */
 }
 
 .expense-amount {
@@ -119,6 +130,7 @@ input {
     border: none;
     width: 70%;
     margin-bottom: 14px;
+    font-family: "Emilys Candy", serif;
 }
 
 #calendar-box, #expenses-box, #drop-box {

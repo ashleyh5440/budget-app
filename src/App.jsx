@@ -242,12 +242,12 @@ function App() {
             placeholder="bill name"
           />
           <button id="add-bill-btn" onClick={addBill}>Add Bill</button>
-          <ul>
+          <ul style={{marginTop: "15px"}}>
             {bills.map((bill, index) => (
-              <li key={index}>
+              <li style={{color: "white"}} key={index}>
                 {bill.name} — Due:{" "}
                 {bill.dueDate.toLocaleDateString()}
-                <button onClick={() => setBills(bills.filter((_, i) => i !== index))}>Delete</button>
+                <button style={{width: "45px !important"}} className="dlt-bill-btn" onClick={() => setBills(bills.filter((_, i) => i !== index))}>X</button>
               </li>
             ))}
           </ul>
@@ -255,7 +255,7 @@ function App() {
       {/* expenses list */}
       <Row id="expenses-box">
         <div style={{ marginTop: "20px", width: "80%", borderTop: "2px solid white" }}>
-          <h4 style={{ marginTop: "10px"}}>Expenses</h4>
+          <p style={{ marginTop: "10px"}}>Expenses</p>
           {expenses.map((expense) => (
             <div
               key={expense.id}
@@ -267,7 +267,7 @@ function App() {
                 marginBottom: "2px solid white",
               }}
             >
-              <span className="expense">{expense.type}</span>
+              <span className="expense" style={{color: "white"}}>{expense.type}</span>
               <input className="expense-amount"
                 type="number"
                 value={expense.amount}
