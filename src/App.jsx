@@ -166,9 +166,18 @@ function App() {
                         className="dot"
                     />
                 ))}
-      <h1>≽༏≼ Firefly Treasury ≽༏≼</h1>
-
-      <div>
+      <h1><span className="logo">≽༏≼</span> Firefly Treasury <span className="logo">≽༏≼</span></h1>
+      {/* <Row>
+        <Col>
+          <h4>Monthly Budget</h4>
+          <p>${budget.toFixed(2)}</p>
+        </Col>
+        <Col>
+          <h4>Current Balance</h4>
+          <p>${currentBalance.toFixed(2)}</p>
+        </Col>
+      </Row> */}
+      <div className="container">
         <h4>Monthly Budget</h4>
         <p>${budget.toFixed(2)}</p>
 
@@ -176,12 +185,12 @@ function App() {
         <p>${currentBalance.toFixed(2)}</p>
       </div>
       {/* insert bill */}
-      <Row>
+      <Row id="drop-box">
         <Dropdown>
-          <Dropdown.Toggle variant="success">
+          <Dropdown.Toggle id="bill-type-btn" variant="success">
             {selectedBillType || "Bill Type"}
           </Dropdown.Toggle>
-          <Dropdown.Menu>
+           <Dropdown.Menu>
             <Dropdown.Item onClick={() => setSelectedBillType("Rent")}>Rent
             </Dropdown.Item>
             <Dropdown.Item onClick={() => setSelectedBillType("Car Payment")}>Car Payment</Dropdown.Item>
@@ -200,60 +209,52 @@ function App() {
         {selectedBillType && (
           <div style={{ marginTop: "10px" }}>
             {selectedBillType === "Other" && (
-      <input
-        type="text"
-        placeholder="Expense Name"
-        value={otherExpense}
-        onChange={(e) => setOtherExpense(e.target.value)}
-      />
+              <input
+                className="other-ex-name"
+                type="text"
+                placeholder="Expense Name"
+                value={otherExpense}
+                onChange={(e) => setOtherExpense(e.target.value)}
+              />
             )}
             <input
+              className="other-ex-amount"
               type="number"
               placeholder="Amount"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
             />
-            <button onClick={addExpense}>Add Expense</button>
+            <button className="add-expense-btn" onClick={addExpense}>Add Expense</button>
           </div>
         )}
       </Row>
       {/* calender */}
-      <Row>
+      <Row id="calendar-box">
           <Calendar
             onChange={setSelectedDate}
             value={selectedDate}
           />
-
           <input
+            className="bill-date"
             type="text"
             value={billName}
             onChange={(e) => setBillName(e.target.value)}
-            placeholder="bill"
+            placeholder="bill name"
           />
-
-          <button onClick={addBill}>Add</button>
-
+          <button id="add-bill-btn" onClick={addBill}>Add Bill</button>
           <ul>
             {bills.map((bill, index) => (
               <li key={index}>
                 {bill.name} — Due:{" "}
                 {bill.dueDate.toLocaleDateString()}
-                <button
-                  onClick={() =>
-                    setBills(
-                      bills.filter((_, i) => i !== index)
-                    )
-                  }
-                >
-                  Delete
-                </button>
+                <button onClick={() => setBills(bills.filter((_, i) => i !== index))}>Delete</button>
               </li>
             ))}
           </ul>
       </Row>
       {/* expenses list */}
-      <Row>
-        <div style={{ marginTop: "20px" }}>
+      <Row id="expenses-box">
+        <div style={{ marginTop: "20px", width: "80%" }}>
           <h4>Expenses</h4>
           {expenses.map((expense) => (
             <div
@@ -263,17 +264,18 @@ function App() {
                 gap: "10px",
                 marginBottom: "10px",
                 alignItems: "center",
+                marginBottom: "2px solid white",
               }}
             >
-              <span>{expense.type}</span>
-              <input
+              <span className="expense">{expense.type}</span>
+              <input className="expense-amount"
                 type="number"
                 value={expense.amount}
                 onChange={(e) =>
                   updateExpense(expense.id, e.target.value)
                 }
               />
-              <button onClick={() => deleteExpense(expense.id)}>Delete</button>
+              <button className="dlt-expense-btn" onClick={() => deleteExpense(expense.id)}>X</button>
               </div>
             ))}
         </div>
