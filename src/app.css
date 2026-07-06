@@ -50,6 +50,17 @@ input {
     align-items: center;
 }
 
+.current-balance-box {
+    background-color: rgba(255, 255, 255, 0.008) !important;
+    text-align: center;
+}
+
+.current-balance-box::-webkit-outer-spin-button,
+.current-balance-box::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0; 
+}
+
 .logo {
     font-size: 30px;
 }

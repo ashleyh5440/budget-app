@@ -15,44 +15,44 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function App() {
 
   // Firefly animation
-   const fireFliesContainerRef = useRef(null);
-    const totalFireFlies = 50;
+  //  const fireFliesContainerRef = useRef(null);
+  //   const totalFireFlies = 50;
 
-    useEffect(() => {
+  //   useEffect(() => {
 
-        const w = window.innerWidth;
-        const h = window.innerHeight;
+  //       const w = window.innerWidth;
+  //       const h = window.innerHeight;
 
-        const Anim = (elm) => {
-            const containerRect = fireFliesContainerRef.current.getBoundingClientRect();
-            const containerWidth = containerRect.width;
-            const containerHeight = containerRect.height;
+  //       const Anim = (elm) => {
+  //           const containerRect = fireFliesContainerRef.current.getBoundingClientRect();
+  //           const containerWidth = containerRect.width;
+  //           const containerHeight = containerRect.height;
 
-            gsap.to(elm, {
-                duration: Math.random() * 10 + 10,
-                x: Math.random() * containerWidth,
-                y: Math.random() * containerHeight,
-                opacity: Math.random(),
-                scale: Math.random() * 0.5 + 1,
-                delay: Math.random() * 2,
-                onComplete: () => Anim(elm),
-            });
-        };
+  //           gsap.to(elm, {
+  //               duration: Math.random() * 10 + 10,
+  //               x: Math.random() * containerWidth,
+  //               y: Math.random() * containerHeight,
+  //               opacity: Math.random(),
+  //               scale: Math.random() * 0.5 + 1,
+  //               delay: Math.random() * 2,
+  //               onComplete: () => Anim(elm),
+  //           });
+  //       };
 
-        const fireFlies = fireFliesContainerRef.current.children;
+  //       const fireFlies = fireFliesContainerRef.current.children;
 
-        for (let i = 0; i < totalFireFlies; i++) {
-            const fireFly = fireFlies[i];
-            gsap.set(fireFly, { opacity: 0 });
-            Anim(fireFly);
-        }
+  //       for (let i = 0; i < totalFireFlies; i++) {
+  //           const fireFly = fireFlies[i];
+  //           gsap.set(fireFly, { opacity: 0 });
+  //           Anim(fireFly);
+  //       }
 
-        return () => {
-            for (let i = 0; i < totalFireFlies; i++) {
-                gsap.killTweensOf(fireFlies[i]);
-            }
-        };
-    }, []);
+  //       return () => {
+  //           for (let i = 0; i < totalFireFlies; i++) {
+  //               gsap.killTweensOf(fireFlies[i]);
+  //           }
+  //       };
+  //   }, []);
 
 
   const [budget, setBudget] = useState(() => {
@@ -60,7 +60,7 @@ function App() {
     return saved ? parseFloat(saved) : 3200;
   });
 
-  const PAYCHECK_START = new Date("2026-06-25");
+  const PAYCHECK_START = new Date("2026-07-10");
   const PAYCHECK_AMOUNT = 1600;
 
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -92,7 +92,45 @@ function App() {
     0
   );
 
-  const currentBalance = availableIncome - totalExpenses;
+  //pie chart
+const billsChart = [
+  ["Bill", "Amount"],
+  ["Rent", 1050],
+  ["Savings Account", 512],
+  ["Car Payment", 350],
+  ["Groceries/Food", 300],
+  ["Insurance", 210],
+  ["Credit Card", 154],
+  ["Gas", 88],
+  ["School Loans", 80],
+  ["Internet", 60],
+  ["Electric", 45],
+  ["Phone", 35],
+];
+
+const totalBills = billsChart
+  .slice(1)
+  .reduce((sum, [, amount]) => sum + amount, 0);
+
+const data = [
+  ...billsChart,
+  ["Remaining Budget", budget - totalBills],
+];
+
+  const options = {
+    title: "Average Monthly Expenses",
+    backgroundColor: "none",
+    color: "white",
+    legend: "none"
+  };
+
+  //current balance
+  const [currentBalance, setCurrentBalance] = useState(() => {
+    const saved = localStorage.getItem("currentBalance");
+    return saved ? parseFloat(saved) : availableIncome;
+  });
+
+  // const currentBalance = availableIncome - totalExpenses;
 
   const addBill = () => {
     if (!billName.trim()) return;
@@ -108,41 +146,48 @@ function App() {
     setBillName("");
   };
 
+
+  const addExpense = () => {
+  const expenseType =
+    selectedBillType === "Other"
+      ? otherExpense.trim()
+      : selectedBillType;
+
+  if (!expenseType || !amount) return;
+
+  const expenseAmount = Number(amount);
+
+  setExpenses([
+    ...expenses,
+    {
+      id: Date.now(),
+      type: expenseType,
+      amount: expenseAmount,
+    },
+  ]);
+
+  setCurrentBalance((prev) => prev - expenseAmount);
+};
   // const addExpense = () => {
-  //   if (!selectedBillType || !amount) return;
+  //   const expenseType =
+  //     selectedBillType === "Other"
+  //       ? otherExpense.trim()
+  //       : selectedBillType;
+
+  //   if (!expenseType || !amount) return;
 
   //   setExpenses([
   //     ...expenses,
   //     {
   //       id: Date.now(),
-  //       type: selectedBillType,
+  //       type: expenseType,
   //       amount: Number(amount),
   //     },
-  // ]);
+  //   ]);
 
-  // setAmount("");
+  //   setAmount("");
+  //   setOtherExpense("");
   // };
-
-  const addExpense = () => {
-    const expenseType =
-      selectedBillType === "Other"
-        ? otherExpense.trim()
-        : selectedBillType;
-
-    if (!expenseType || !amount) return;
-
-    setExpenses([
-      ...expenses,
-      {
-        id: Date.now(),
-        type: expenseType,
-        amount: Number(amount),
-      },
-    ]);
-
-    setAmount("");
-    setOtherExpense("");
-  };
 
   const deleteExpense = (id) => {
     setExpenses(expenses.filter((expense) => expense.id !== id));
@@ -159,33 +204,35 @@ function App() {
   };
 
   return (
-    <section className="fireflies-container" ref={fireFliesContainerRef}>
-      {Array.from({ length: totalFireFlies }, (_, index) => (
-                    <div
-                        key={index}
-                        className="dot"
-                    />
-                ))}
-      <h1><span className="logo">≽༏≼</span> Firefly Treasury <span className="logo">≽༏≼</span></h1>
-      {/* <Row>
-        <Col>
-          <h4>Monthly Budget</h4>
-          <p>${budget.toFixed(2)}</p>
-        </Col>
-        <Col>
-          <h4>Current Balance</h4>
-          <p>${currentBalance.toFixed(2)}</p>
-        </Col>
-      </Row> */}
+    <section>
+       <h1><span className="logo">🍪</span> The Cookie Jar <span className="logo">🍪</span></h1>
       <div className="container">
         <h4>Monthly Budget</h4>
         <p>${budget.toFixed(2)}</p>
 
+        <div className="chart-box">
+          <Chart
+            chartType="PieChart"
+            data={data}
+            options={options}
+            width={"100%"}
+            height={"400px"}
+          
+          />
+
+        </div>
         <h4>Current Balance</h4>
-        <p>${currentBalance.toFixed(2)}</p>
+          <input
+          className="current-balance-box"
+            type="number"
+            value={currentBalance}
+            onChange={(e) => setCurrentBalance(Number(e.target.value))}
+          />
+        {/* <p>${currentBalance.toFixed(2)}</p> */}
       </div>
       {/* insert bill */}
       <Row id="drop-box">
+        <h4 style={{marginTop: "45px"}}>Add a bill</h4>
         <Dropdown>
           <Dropdown.Toggle id="bill-type-btn" variant="success">
             {selectedBillType || "Bill Type"}
