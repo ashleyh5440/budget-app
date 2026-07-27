@@ -95,7 +95,7 @@ function App() {
   //pie chart
 const billsChart = [
   ["Bill", "Amount"],
-  ["Rent", 1050],
+  ["Rent", 1075],
   ["Savings Account", 512],
   ["Car Payment", 350],
   ["Groceries/Food", 300],
@@ -168,26 +168,6 @@ const data = [
 
   setCurrentBalance((prev) => prev - expenseAmount);
 };
-  // const addExpense = () => {
-  //   const expenseType =
-  //     selectedBillType === "Other"
-  //       ? otherExpense.trim()
-  //       : selectedBillType;
-
-  //   if (!expenseType || !amount) return;
-
-  //   setExpenses([
-  //     ...expenses,
-  //     {
-  //       id: Date.now(),
-  //       type: expenseType,
-  //       amount: Number(amount),
-  //     },
-  //   ]);
-
-  //   setAmount("");
-  //   setOtherExpense("");
-  // };
 
   const deleteExpense = (id) => {
     setExpenses(expenses.filter((expense) => expense.id !== id));
@@ -209,7 +189,6 @@ const data = [
       <div className="container">
         <h4>Monthly Budget</h4>
         <p>${budget.toFixed(2)}</p>
-
         <div className="chart-box">
           <Chart
             chartType="PieChart"
@@ -217,9 +196,7 @@ const data = [
             options={options}
             width={"100%"}
             height={"400px"}
-          
           />
-
         </div>
         <h4>Current Balance</h4>
           <input
